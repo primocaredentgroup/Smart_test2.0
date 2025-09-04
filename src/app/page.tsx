@@ -31,11 +31,11 @@ export default function HomePage() {
 
 function HomePageContent() {
   const { isAdmin } = useRole();
-  const { getUserEmail } = useAuth();
+  const { user } = useAuth();
   const tests = useQuery(api.tests.listTests);
   
-  // Get user email from custom auth
-  const userEmail = getUserEmail();
+  // Get user email from Auth0 user
+  const userEmail = user?.email || '';
 
   // Loading state
   if (tests === undefined) {

@@ -2,13 +2,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { DashboardIcon, LayersIcon, GearIcon, CheckCircledIcon } from "@radix-ui/react-icons";
+import { DashboardIcon, LayersIcon, GearIcon, CheckCircledIcon, PersonIcon } from "@radix-ui/react-icons";
 import { useRole } from "@/contexts/RoleContext";
 
 const allNavItems = [
   { href: "/", label: "Dashboard", icon: DashboardIcon, color: "text-blue-600", roles: ["admin", "tester"] },
   { href: "/tests", label: "Tests", icon: LayersIcon, color: "text-emerald-600", roles: ["admin", "tester"] },
   { href: "/admin", label: "Admin", icon: GearIcon, color: "text-purple-600", roles: ["admin"] },
+  { href: "/admin/users", label: "Gestione Utenti", icon: PersonIcon, color: "text-orange-600", roles: ["admin"] },
 ];
 
 export function Sidebar() {

@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Sidebar } from "@/components/Sidebar";
-import { RoleSwitcher } from "@/components/RoleSwitcher";
 import { AuthButton } from "@/components/AuthButton";
 
 interface ConditionalLayoutProps {
@@ -59,12 +58,11 @@ export function ConditionalLayout({ children }: ConditionalLayoutProps) {
     <div className="min-h-screen flex bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
       <Sidebar />
       <div className="flex-1 flex flex-col overflow-auto">
-        {/* Header con Auth e Role Switcher */}
-        <header className="flex justify-between items-center p-4 md:p-6">
+        {/* Header con Auth */}
+        <header className="flex justify-end items-center p-4 md:p-6">
           <div className="flex items-center gap-4">
             <AuthButton />
           </div>
-          <RoleSwitcher />
         </header>
         
         {/* Main Content */}

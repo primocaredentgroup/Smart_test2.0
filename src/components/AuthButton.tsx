@@ -1,10 +1,9 @@
 "use client";
 import { PersonIcon, ExitIcon } from "@radix-ui/react-icons";
-import Link from "next/link";
 import { useAuth } from "@/hooks/useAuth";
 
 export function AuthButton() {
-  const { user, isLoading, logout } = useAuth();
+  const { user, isLoading, login, logout } = useAuth();
 
   if (isLoading) {
     return (
@@ -30,7 +29,7 @@ export function AuthButton() {
         <button
           onClick={logout}
           className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-          title="Logout"
+          title="Logout da Auth0"
         >
           <ExitIcon className="w-4 h-4" />
           <span>Logout</span>
@@ -41,13 +40,13 @@ export function AuthButton() {
 
   return (
     <div className="flex items-center gap-3">
-      <Link
-        href="/login"
+      <button
+        onClick={login}
         className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
       >
         <PersonIcon className="w-4 h-4" />
-        Login
-      </Link>
+        Login con Auth0
+      </button>
     </div>
   );
 }

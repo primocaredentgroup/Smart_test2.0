@@ -1,11 +1,11 @@
 "use client";
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 type Role = "admin" | "tester";
 
 type RoleContextType = {
   role: Role;
-  setRole: (role: Role) => void;
   isAdmin: boolean;
   isTester: boolean;
 };
@@ -13,11 +13,13 @@ type RoleContextType = {
 const RoleContext = createContext<RoleContextType | undefined>(undefined);
 
 export function RoleProvider({ children }: { children: ReactNode }) {
-  const [role, setRole] = useState<Role>("tester"); // Default tester in sviluppo
+  const { user } = useAuth();
+  
+  // Usa il ruolo REALE dall'utente autenticato, fallback a "tester"
+  const role: Role = (user?.ruolo as Role) || "tester";
   
   const value = {
     role,
-    setRole,
     isAdmin: role === "admin",
     isTester: role === "tester",
   };
