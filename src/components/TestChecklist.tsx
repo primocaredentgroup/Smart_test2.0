@@ -1,12 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { updateTask } from "@/lib/convexActions";
 import { CheckCircledIcon, ClockIcon, CrossCircledIcon, StopwatchIcon, MinusCircledIcon, TrashIcon } from "@radix-ui/react-icons";
 
 type Task = { _id: string; title: string; status: string; notes?: string; source?: string };
 type Props = { 
   tasks: Task[];
-  onAddCustomTask?: (taskTitle: string) => void;
   onDeleteCustomTask?: (taskId: string) => void;
 };
 
@@ -18,7 +16,7 @@ const statuses = [
   { value: "skipped", label: "Saltato", icon: MinusCircledIcon, className: "text-amber-600" },
 ];
 
-export function TestChecklist({ tasks, onAddCustomTask, onDeleteCustomTask }: Props) {
+export function TestChecklist({ tasks, onDeleteCustomTask }: Props) {
   const [localTasks, setLocalTasks] = useState(tasks);
 
   // Aggiorna i task locali quando cambiano i task dalle props
@@ -26,14 +24,14 @@ export function TestChecklist({ tasks, onAddCustomTask, onDeleteCustomTask }: Pr
     setLocalTasks(tasks);
   }, [tasks]);
 
-  async function setStatus(taskId: string, status: string) {
+  function setStatus(taskId: string, status: string) {
     setLocalTasks((prev) => prev.map((t) => (String(t._id) === taskId ? { ...t, status } : t)));
-    await updateTask({ taskId, status });
+    // TODO: Add real task update via Convex when Auth0 is integrated
   }
 
-  async function setNotes(taskId: string, notes: string) {
+  function setNotes(taskId: string, notes: string) {
     setLocalTasks((prev) => prev.map((t) => (String(t._id) === taskId ? { ...t, notes } : t)));
-    await updateTask({ taskId, notes });
+    // TODO: Add real task update via Convex when Auth0 is integrated
   }
 
   function deleteCustomTask(taskId: string) {

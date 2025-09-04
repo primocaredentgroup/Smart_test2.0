@@ -1,30 +1,68 @@
-// Funzioni statiche per dati hardcoded - solo UI frontend
-import { staticData } from "@/lib/dataClient";
+// Convex integration for real-time data operations
+// These are utility functions that components can use
+// The actual Convex hooks will be used directly in components
 
-export async function listTests() {
-  return staticData.tests;
-}
+// Helper to get formatted date strings for display
+export const formatDate = (timestamp: number) => {
+  return new Date(timestamp).toLocaleDateString("it-IT", {
+    year: "numeric",
+    month: "short", 
+    day: "numeric"
+  });
+};
 
-export async function listMacroareas() {
-  return staticData.macroareas;
-}
+// Helper to calculate task completion percentage
+export const getTaskCompletionPercentage = (tasks: Array<{status: string}>) => {
+  if (tasks.length === 0) return 0;
+  const completed = tasks.filter(t => t.status === "done").length;
+  return Math.round((completed / tasks.length) * 100);
+};
 
-export async function createTest(input: { name: string; jiraLink?: string; macroareaIds: string[] }) {
-  // Simulazione creazione - per UI purposes
-  const id = `test-${Date.now()}`;
-  console.log("Simulazione creazione test:", input);
-  return { id };
-}
+// Helper to determine test status from tasks
+export const calculateTestStatus = (tasks: Array<{status: string}>) => {
+  if (tasks.length === 0) return "open";
+  
+  const completedTasks = tasks.filter(t => t.status === "done");
+  const failedTasks = tasks.filter(t => t.status === "failed");
+  
+  if (failedTasks.length > 0) return "failed";
+  if (completedTasks.length === tasks.length) return "completed";
+  if (completedTasks.length > 0) return "in_progress";
+  
+  return "open";
+};
 
-export async function getTestDetail(id: string) {
-  const test = staticData.tests.find((t) => t._id === id) ?? null;
-  const tasks = staticData.testTasks[id as keyof typeof staticData.testTasks] ?? [];
-  return { test, tasks };
-}
+// Get current user email from custom auth or fallback to mock
+export const getCurrentUserEmail = () => {
+  // This will be replaced by custom auth hook in components
+  return "simone@example.com"; // Fallback per SSR
+};
 
-export async function updateTask(input: { taskId: string; status?: string; notes?: string }) {
-  console.log("Simulazione update task:", input);
-  return { ok: true };
-}
+// Status display helpers
+export const getStatusLabel = (status: string) => {
+  const labels: Record<string, string> = {
+    open: "Da iniziare",
+    in_progress: "In corso", 
+    completed: "Completato",
+    failed: "Fallito",
+    todo: "Da testare",
+    done: "Fatto",
+    rejected: "Rifiutato",
+    skipped: "Saltato"
+  };
+  return labels[status] || status;
+};
 
-
+export const getStatusColor = (status: string) => {
+  const colors: Record<string, string> = {
+    open: "bg-slate-100 text-slate-800",
+    in_progress: "bg-blue-100 text-blue-800", 
+    completed: "bg-emerald-100 text-emerald-800",
+    failed: "bg-red-100 text-red-800",
+    todo: "bg-slate-100 text-slate-800",
+    done: "bg-emerald-100 text-emerald-800",
+    rejected: "bg-red-100 text-red-800",
+    skipped: "bg-amber-100 text-amber-800"
+  };
+  return colors[status] || "bg-slate-100 text-slate-800";
+};

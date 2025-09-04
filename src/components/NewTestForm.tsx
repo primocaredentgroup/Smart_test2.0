@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useMutation } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { useAuth } from "@/hooks/useAuth";
 import { CheckIcon, Link2Icon } from "@radix-ui/react-icons";
 
 type Props = { macroareas: Array<{ _id?: string; id?: string; name: string; standardTasks: any[] }> };
@@ -14,6 +17,8 @@ type FormValues = {
 
 export function NewTestForm({ macroareas }: Props) {
   const router = useRouter();
+  const createTest = useMutation(api.tests.createTest);
+  const { getUserEmail } = useAuth();
   const { register, handleSubmit, watch, formState: { errors } } = useForm<FormValues>({
     defaultValues: { name: "", jiraLink: "", macroareas: [] },
   });
@@ -29,19 +34,21 @@ export function NewTestForm({ macroareas }: Props) {
     try {
       const selectedIds = macroareas
         .filter((m) => values.macroareas.includes(m.name))
-        .map((m) => String(m._id ?? m.id));
+        .map((m) => m._id!); // Convex IDs
       
-      // Simulazione creazione - solo UI
-      console.log("Nuovo test creato:", { 
-        name: values.name, 
-        jiraLink: values.jiraLink, 
-        macroareaIds: selectedIds 
+      // Crea il test usando Convex
+      const testId = await createTest({
+        name: values.name,
+        jiraLink: values.jiraLink || undefined,
+        creatorEmail: getUserEmail(),
+        macroareaIds: selectedIds,
       });
       
-      // Piccolo delay per simulare chiamata server
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      console.log("✅ Test creato con successo:", testId);
       router.push("/tests");
+    } catch (error) {
+      console.error("❌ Errore nella creazione del test:", error);
+      // In produzione, mostrare un toast di errore
     } finally {
       setSubmitting(false);
     }

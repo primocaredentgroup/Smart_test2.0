@@ -1,6 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
-import { getTestDetail } from "@/lib/convexActions";
+import React, { useState } from "react";
+import { useQuery, useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
+import { formatDate, calculateTestStatus } from "@/lib/convexActions";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 import { StatusBadge } from "@/components/StatusBadge";
 import { TestChecklist } from "@/components/TestChecklist";
 import { AddCustomTaskModal } from "@/components/AddCustomTaskModal";
@@ -11,29 +15,24 @@ import { notFound } from "next/navigation";
 type Params = { params: Promise<{ id: string }> };
 
 export default function TestDetailPage({ params }: Params) {
-  const [test, setTest] = useState<any>(null);
-  const [tasks, setTasks] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Extract ID from params
+  const [testId, setTestId] = useState<string | null>(null);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
   const [customTasks, setCustomTasks] = useState<any[]>([]);
+  const [saving, setSaving] = useState(false);
+  
+  // Convex mutations and Auth
+  const updateTestStatus = useMutation(api.tests.updateTestStatus);
+  const { getUserEmail } = useAuth();
 
-  useEffect(() => {
-    async function loadData() {
-      const { id } = await params;
-      const { test: testData, tasks: tasksData } = await getTestDetail(id);
-      
-      if (!testData) {
-        notFound();
-        return;
-      }
-      
-      setTest(testData);
-      setTasks(tasksData);
-      setLoading(false);
-    }
-    
-    loadData();
+  // Setup params extraction
+  React.useEffect(() => {
+    params.then(({ id }) => setTestId(id));
   }, [params]);
+
+  // Convex queries
+  const test = useQuery(api.tests.getTestById, testId ? { testId } : "skip");
+  const tasks = useQuery(api.testTasks.getTasksByTestId, testId ? { testId } : "skip");
 
   function addCustomTask(taskTitle: string) {
     const newTask = {
@@ -53,7 +52,59 @@ export default function TestDetailPage({ params }: Params) {
     console.log("Task custom eliminato:", taskId);
   }
 
-  if (loading) {
+  async function saveChanges() {
+    if (!testId || !test || !tasks) return;
+
+    setSaving(true);
+    try {
+      // Combina tutti i task (DB + custom)
+      const allTasks = [...tasks, ...customTasks];
+      
+      // Calcola nuovo status del test basato sui task
+      const currentTestStatus = calculateTestStatus(allTasks);
+      
+      // Se il status è cambiato, aggiorna nel database
+      if (currentTestStatus !== test.status) {
+        await updateTestStatus({
+          testId: testId as any,
+          status: currentTestStatus as any,
+          userEmail: getUserEmail(),
+        });
+        
+        toast.success(`🎉 Test aggiornato a "${getStatusLabel(currentTestStatus)}"`);
+      } else {
+        toast.success("✅ Modifiche salvate correttamente");
+      }
+      
+      console.log("✅ Modifiche salvate:", { 
+        testId, 
+        oldStatus: test.status, 
+        newStatus: currentTestStatus,
+        totalTasks: allTasks.length,
+        completedTasks: allTasks.filter(t => t.status === "done").length
+      });
+      
+    } catch (error) {
+      console.error("❌ Errore nel salvare:", error);
+      toast.error("❌ Errore nel salvare le modifiche");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  // Helper per ottenere label dello status
+  function getStatusLabel(status: string) {
+    const labels: Record<string, string> = {
+      open: "Da iniziare",
+      in_progress: "In corso",
+      completed: "Completato", 
+      failed: "Fallito"
+    };
+    return labels[status] || status;
+  }
+
+  // Loading state
+  if (!testId || test === undefined || tasks === undefined) {
     return (
       <div className="flex items-center justify-center min-h-96">
         <div className="text-center">
@@ -64,12 +115,17 @@ export default function TestDetailPage({ params }: Params) {
     );
   }
 
+  // Test not found
   if (!test) {
     notFound();
   }
 
   // Combina task standard e custom
-  const allTasks = [...tasks, ...customTasks];
+  const allTasks = [...(tasks || []), ...customTasks];
+  
+  // Controlla se ci sono modifiche non salvate
+  const currentTestStatus = calculateTestStatus(allTasks);
+  const hasUnsavedChanges = test && currentTestStatus !== test.status;
 
   return (
     <div className="space-y-8">
@@ -101,7 +157,7 @@ export default function TestDetailPage({ params }: Params) {
                   {test.createdAt && (
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="w-4 h-4" />
-                      <span>Creato il {test.createdAt}</span>
+                      <span>Creato il {formatDate(test.createdAt)}</span>
                     </div>
                   )}
                 </div>
@@ -168,9 +224,31 @@ export default function TestDetailPage({ params }: Params) {
 
       {/* Actions */}
       <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200/50 dark:border-slate-700/50">
+        {hasUnsavedChanges && (
+          <div className="mb-4 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl">
+            <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200">
+              <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium">
+                Status del test cambierà da "{getStatusLabel(test?.status || '')}" a "{getStatusLabel(currentTestStatus)}"
+              </span>
+            </div>
+          </div>
+        )}
+        
         <div className="flex flex-col sm:flex-row gap-3">
-          <button className="px-6 py-3 bg-emerald-500 text-white rounded-xl font-medium hover:bg-emerald-600 transition-colors">
-            Salva modifiche
+          <button 
+            onClick={saveChanges}
+            disabled={saving}
+            className={`px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2 ${
+              hasUnsavedChanges 
+                ? "bg-amber-500 text-white hover:bg-amber-600 disabled:bg-amber-300" 
+                : "bg-emerald-500 text-white hover:bg-emerald-600 disabled:bg-emerald-300"
+            } disabled:cursor-not-allowed`}
+          >
+            {saving && (
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            )}
+            {saving ? "Salvando..." : hasUnsavedChanges ? "💾 Salva modifiche" : "✅ Salvato"}
           </button>
           <button 
             onClick={() => setShowAddTaskModal(true)}

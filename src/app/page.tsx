@@ -1,7 +1,11 @@
 "use client";
 import Link from "next/link";
 import { useRole } from "@/contexts/RoleContext";
-import { staticData } from "@/lib/dataClient";
+import { useQuery } from "convex/react";
+import { api } from "../../convex/_generated/api";
+import { formatDate } from "@/lib/convexActions";
+import { useAuth } from "@/hooks/useAuth";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { 
   CheckCircledIcon, 
   ClockIcon, 
@@ -18,16 +22,37 @@ import {
 } from "@radix-ui/react-icons";
 
 export default function HomePage() {
-  const { isAdmin, role } = useRole();
-  const tests = staticData.tests;
+  return (
+    <ProtectedRoute>
+      <HomePageContent />
+    </ProtectedRoute>
+  );
+}
+
+function HomePageContent() {
+  const { isAdmin } = useRole();
+  const { getUserEmail } = useAuth();
+  const tests = useQuery(api.tests.listTests);
   
-  // Mock user email - in futuro verrà da Auth0
-  const mockUserEmail = "simone@example.com";
+  // Get user email from custom auth
+  const userEmail = getUserEmail();
+
+  // Loading state
+  if (tests === undefined) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400">Caricamento dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (isAdmin) {
     return <AdminDashboard tests={tests} />;
   } else {
-    return <TesterDashboard userEmail={mockUserEmail} tests={tests} />;
+    return <TesterDashboard userEmail={userEmail} tests={tests} />;
   }
 }
 
@@ -248,7 +273,7 @@ function AdminDashboard({ tests }: { tests: any[] }) {
                       <span>{test.creatorEmail}</span>
                     </div>
                     <span>•</span>
-                    <span>{test.createdAt}</span>
+                    <span>{formatDate(test.createdAt)}</span>
                     {test.jiraLink && (
                       <>
                         <span>•</span>
@@ -434,7 +459,7 @@ function TesterDashboard({ userEmail, tests }: { userEmail: string; tests: any[]
                     <div className="flex items-center gap-4 mt-2 text-sm text-slate-600 dark:text-slate-400">
                       <div className="flex items-center gap-2">
                         <CalendarIcon className="w-4 h-4" />
-                        <span>{test.createdAt}</span>
+                        <span>{formatDate(test.createdAt)}</span>
                       </div>
                       {test.jiraLink && (
                         <>

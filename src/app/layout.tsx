@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Sidebar } from "@/components/Sidebar";
-import { RoleSwitcher } from "@/components/RoleSwitcher";
+import { ConditionalLayout } from "@/components/ConditionalLayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,22 +28,9 @@ export default function RootLayout({
     <html lang="it">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}> 
         <Providers>
-          <div className="min-h-screen flex bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-            <Sidebar />
-            <div className="flex-1 flex flex-col overflow-auto">
-              {/* Header with Role Switcher */}
-              <header className="flex justify-end p-4 md:p-6">
-                <RoleSwitcher />
-              </header>
-              
-              {/* Main Content */}
-              <main className="flex-1 px-4 md:px-6 lg:px-8 pb-8">
-                <div className="max-w-7xl mx-auto">
-                  {children}
-                </div>
-              </main>
-            </div>
-          </div>
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
         </Providers>
       </body>
     </html>

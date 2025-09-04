@@ -10,7 +10,7 @@ export default function AdminPage() {
   const { isAdmin } = useRole();
   const [macroareas, setMacroareas] = useState(staticData.macroareas);
 
-  // Redirect if not admin (this will be handled by Auth0 later)
+  // Redirect if not admin (this will be handled by custom auth later)
   if (!isAdmin) {
     return (
       <div className="flex items-center justify-center min-h-96">

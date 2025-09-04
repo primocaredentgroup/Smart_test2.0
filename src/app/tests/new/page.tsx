@@ -1,10 +1,24 @@
-import { staticData } from "@/lib/dataClient";
+"use client";
+import { useQuery } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 import { NewTestForm } from "@/components/NewTestForm";
 import { ArrowLeftIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 
 export default function NewTestPage() {
-  const macroareas = staticData.macroareas;
+  const macroareas = useQuery(api.macroareas.listMacroareas);
+
+  // Loading state
+  if (macroareas === undefined) {
+    return (
+      <div className="flex items-center justify-center min-h-96">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-600 dark:text-slate-400">Caricamento macroaree...</p>
+        </div>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-6">
