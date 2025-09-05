@@ -42,12 +42,12 @@ function DashboardContent() {
           <p className="text-slate-600 dark:text-slate-400 mb-4">
             {error.message}
           </p>
-          <Link 
-            href="/api/auth/login"
+          <button 
+            onClick={() => window.location.href = '/api/auth/login'}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Riprova il Login
-          </Link>
+          </button>
         </div>
       </div>
     );
@@ -64,12 +64,12 @@ function DashboardContent() {
           <p className="text-slate-600 dark:text-slate-400 mb-4">
             Devi effettuare il login per accedere alla dashboard
           </p>
-          <Link 
-            href="/api/auth/login"
+          <button 
+            onClick={() => window.location.href = '/api/auth/login'}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Login con Auth0
-          </Link>
+          </button>
         </div>
       </div>
     );

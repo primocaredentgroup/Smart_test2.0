@@ -25,12 +25,12 @@ export default function HomePage() {
           </p>
           
           <div className="space-y-4 max-w-md mx-auto">
-            <Link
-              href="/login"
+            <button
+              onClick={() => window.location.href = '/login'}
               className="block w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors"
             >
               🔐 Accedi
-            </Link>
+            </button>
             
             <Link
               href="/signup"
