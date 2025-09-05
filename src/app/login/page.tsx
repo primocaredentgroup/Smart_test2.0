@@ -45,13 +45,14 @@ export default function LoginPage() {
         <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-lg border border-slate-200/50 dark:border-slate-700/50 p-8">
           <div className="space-y-6">
             {/* Auth0 Login Button */}
-            <button
-              onClick={() => window.location.href = '/api/auth/login'}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2"
+            <a
+              href="/api/auth/login"
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 no-underline"
+              style={{ textDecoration: 'none' }}
             >
               <PersonIcon className="w-4 h-4" />
               <span>🔐 Login con Auth0</span>
-            </button>
+            </a>
 
             <div className="text-center">
               <p className="text-sm text-slate-600 dark:text-slate-400">
