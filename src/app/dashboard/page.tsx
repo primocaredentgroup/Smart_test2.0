@@ -11,6 +11,9 @@ import Link from 'next/link';
 function DashboardContent() {
   const { user, error, isLoading } = useUser();
   
+  // DEBUG: Log Auth0 state
+  console.log('🔍 Auth0 Debug:', { user, error, isLoading });
+  
   // Fetch tests data from Convex
   const tests = useQuery(api.tests.listTests) || [];
 
