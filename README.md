@@ -212,4 +212,4 @@ Per problemi o feature request:
 ---
 
 **🏥 Powered by PrimoCare Dental Group**  
-*Ensuring software quality for better dental care*
+*Ensuring software quality for better dental care*# Force redeploy Fri Sep  5 17:17:20 CEST 2025
