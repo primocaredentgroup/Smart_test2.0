@@ -6,25 +6,70 @@ import { AdminDashboard } from '@/components/AdminDashboard';
 import { TesterDashboard } from '@/components/TesterDashboard';
 import { Suspense } from 'react';
 import { api } from '../../../convex/_generated/api';
+import Link from 'next/link';
 
 function DashboardContent() {
-  const { user } = useUser();
+  const { user, error, isLoading } = useUser();
   
   // Fetch tests data from Convex
   const tests = useQuery(api.tests.listTests) || [];
 
-  // Verifica solo Auth0 per ora
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <h1 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+            Caricamento...
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400">
+            Verifica autenticazione in corso
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600 mb-4">
+            Errore di Autenticazione
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 mb-4">
+            {error.message}
+          </p>
+          <Link 
+            href="/api/auth/login"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Riprova il Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Not authenticated
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-            Configurazione accesso...
+            Accesso Richiesto
           </h1>
           <p className="text-slate-600 dark:text-slate-400 mb-4">
-            Sincronizzazione Auth0 con database in corso
+            Devi effettuare il login per accedere alla dashboard
           </p>
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <Link 
+            href="/api/auth/login"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Login con Auth0
+          </Link>
         </div>
       </div>
     );

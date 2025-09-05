@@ -1,8 +1,33 @@
+"use client";
+import { useUser } from '@auth0/nextjs-auth0';
+import { useEffect } from 'react';
 import { PersonIcon } from "@radix-ui/react-icons";
 import Link from 'next/link';
 
-// Pagina login pubblica
+// Client Component con check auth
 export default function LoginPage() {
+  const { user, isLoading } = useUser();
+
+  // Se già autenticato, reindirizza al dashboard
+  useEffect(() => {
+    if (user && !isLoading) {
+      window.location.href = '/dashboard';
+    }
+  }, [user, isLoading]);
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  // Se già autenticato, non mostrare form
+  if (user) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">
@@ -30,7 +55,7 @@ export default function LoginPage() {
 
             <div className="text-center">
               <p className="text-sm text-slate-600 dark:text-slate-400">
-                Autenticazione sicura tramite Auth0
+                ✅ Autenticazione sicura tramite Auth0 SDK ufficiale
               </p>
             </div>
           </div>

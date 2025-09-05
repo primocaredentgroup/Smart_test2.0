@@ -1,8 +1,18 @@
+"use client";
+import { useUser } from '@auth0/nextjs-auth0';
+import { useEffect } from 'react';
 import Link from "next/link";
 
-// Torna ad essere una pagina pubblica per ora
-// In futuro aggiungeremo check Auth0 server-side
+// Client Component con auth check
 export default function HomePage() {
+  const { user, isLoading } = useUser();
+
+  // Se autenticato, reindirizza al dashboard
+  useEffect(() => {
+    if (user && !isLoading) {
+      window.location.href = '/dashboard';
+    }
+  }, [user, isLoading]);
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-slate-900 dark:to-slate-800">
       <div className="container mx-auto px-4 py-16">
