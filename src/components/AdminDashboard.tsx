@@ -187,8 +187,9 @@ export function AdminDashboard({ tests }: Props) {
                 {testsNeedingAttention.map((test) => (
                   <div key={test._id} className="flex items-center justify-between p-3 bg-red-50 dark:bg-red-900/10 rounded-lg">
                     <div>
-                      <Link 
+                                            <Link
                         href={`/tests/${test._id}`}
+                        prefetch={false}
                         className="font-medium text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                       >
                         {test.name}
@@ -211,6 +212,7 @@ export function AdminDashboard({ tests }: Props) {
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white">Attività Recente del Team</h2>
             <Link 
               href="/tests" 
+              prefetch={false}
               className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
             >
               Vedi tutti →
@@ -224,6 +226,7 @@ export function AdminDashboard({ tests }: Props) {
                 <div className="flex-1">
                   <Link 
                     href={`/tests/${test._id}`}
+                    prefetch={false}
                     className="text-lg font-medium text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   >
                     {test.name}

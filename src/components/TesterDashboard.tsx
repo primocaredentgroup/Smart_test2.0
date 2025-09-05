@@ -93,6 +93,7 @@ export function TesterDashboard({ userEmail, tests }: Props) {
             <h2 className="text-xl font-semibold text-slate-900 dark:text-white">I miei ultimi test</h2>
             <Link 
               href="/tests" 
+              prefetch={false}
               className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
             >
               Vedi tutti →
@@ -105,6 +106,7 @@ export function TesterDashboard({ userEmail, tests }: Props) {
               <p className="text-slate-600 dark:text-slate-400">Non hai ancora creato test.</p>
               <Link 
                 href="/tests/new"
+                prefetch={false}
                 className="inline-flex items-center mt-3 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
               >
                 Crea il tuo primo test →
@@ -117,6 +119,7 @@ export function TesterDashboard({ userEmail, tests }: Props) {
                   <div className="flex-1">
                     <Link 
                       href={`/tests/${test._id}`}
+                      prefetch={false}
                       className="text-lg font-medium text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                     >
                       {test.name}
@@ -148,6 +151,7 @@ export function TesterDashboard({ userEmail, tests }: Props) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Link 
           href="/tests/new"
+          prefetch={false}
           className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-all duration-200 group"
         >
           <div className="flex items-center gap-4">
