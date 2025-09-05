@@ -1,84 +1,28 @@
 "use client";
-import { useEffect, useState } from 'react';
+import { useUser } from '@auth0/nextjs-auth0/client';
+import { useEffect } from 'react';
 
 export default function CallbackPage() {
-  const [status, setStatus] = useState('🔄 Processando...');
-  const [userInfo, setUserInfo] = useState<{ email?: string; name?: string; picture?: string; sub?: string; } | null>(null);
+  const { user, error, isLoading } = useUser();
 
   useEffect(() => {
-    const processAuth0Callback = async () => {
-      try {
-        // Estrai il code dall'URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const code = urlParams.get('code');
-        
-        if (!code) {
-          setStatus('❌ Errore: Nessun authorization code trovato');
-          return;
-        }
+    if (user) {
+      console.log('✅ Login completato con Auth0 SDK!', user);
+      // Redirect alla homepage dopo login riuscito
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1000);
+    }
+    if (error) {
+      console.error('❌ Errore Auth0:', error);
+    }
+  }, [user, error]);
 
-        console.log('✅ Callback Auth0 ricevuto! Code:', code);
-        setStatus('🔍 Ottenendo dati utente da Auth0...');
-
-        // Chiama la nostra API per ottenere i dati VERI dall'utente
-        const response = await fetch('/api/user/me', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ auth0User: { email: 'test@example.com', name: 'Test User' } }),
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          console.log('🎉 Dati ricevuti:', data);
-          const user = data.user || data || { email: 'test@example.com', name: 'Test User' };
-          setUserInfo(user);
-          setStatus(`✅ Login completato! Ciao ${user.name || user.email}!`);
-          
-          // Salva i dati utente nel localStorage per il nostro hook
-          localStorage.setItem('auth0_user_data', JSON.stringify(user));
-          
-          // Redirect alla homepage
-          setTimeout(() => {
-            window.location.href = '/?logged_in=true';
-          }, 2000);
-        } else {
-          console.error('❌ Errore nella chiamata API');
-          setStatus('❌ Errore nel processamento dati utente');
-        }
-        
-      } catch (error) {
-        console.error('❌ Errore nel callback:', error);
-        setStatus('❌ Errore nel processamento login');
-      }
-    };
-
-    processAuth0Callback();
-  }, []);
-
-  return (
-    <div style={{ padding: "20px", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
-      <h1>🔐 Processamento Login Auth0</h1>
-      <p style={{ fontSize: "18px", margin: "20px 0" }}>{status}</p>
-      
-      {userInfo && (
-        <div style={{ 
-          background: "#f0f8ff", 
-          padding: "15px", 
-          borderRadius: "8px", 
-          margin: "20px 0",
-          textAlign: "left"
-        }}>
-          <h3>👤 Dati Utente Ricevuti:</h3>
-          <p><strong>📧 Email:</strong> {userInfo.email}</p>
-          <p><strong>👤 Nome:</strong> {userInfo.name}</p>
-          <p><strong>🖼️ Foto:</strong> {userInfo.picture ? '✅' : '❌'}</p>
-          <p><strong>🆔 Auth0 ID:</strong> {userInfo.sub}</p>
-        </div>
-      )}
-      
-      <div style={{ margin: "20px 0" }}>
+  if (isLoading) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
+        <h1>🔐 Processamento Login Auth0</h1>
+        <p>🔄 Caricamento...</p>
         <div style={{ 
           width: "50px", 
           height: "50px", 
@@ -86,24 +30,41 @@ export default function CallbackPage() {
           borderTop: "5px solid #3498db",
           borderRadius: "50%",
           animation: "spin 2s linear infinite",
-          margin: "0 auto"
+          margin: "20px auto"
         }}></div>
+        <style jsx>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
-      
-      <div style={{ 
-        fontSize: "14px", 
-        color: "#666", 
-        marginTop: "20px" 
-      }}>
-        Verrai reindirizzato alla dashboard tra poco...
+    );
+  }
+
+  if (error) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
+        <h1>❌ Errore Login</h1>
+        <p>Si è verificato un errore durante il login: {error.message}</p>
       </div>
-      
-      <style jsx>{`
-        @keyframes spin {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
-        }
-      `}</style>
+    );
+  }
+
+  if (user) {
+    return (
+      <div style={{ padding: "20px", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
+        <h1>✅ Login Completato!</h1>
+        <p>Ciao {user.name || user.email}!</p>
+        <p>Reindirizzamento in corso...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "20px", textAlign: "center", fontFamily: "Arial, sans-serif" }}>
+      <h1>🔐 Auth0 Callback</h1>
+      <p>Processamento in corso...</p>
     </div>
   );
 }
