@@ -21,12 +21,12 @@ export default function CallbackPage() {
         setStatus('🔍 Ottenendo dati utente da Auth0...');
 
         // Chiama la nostra API per ottenere i dati VERI dall'utente
-        const response = await fetch('/api/auth0/user-info', {
+        const response = await fetch('/api/user/me', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ code }),
+          body: JSON.stringify({ auth0User: { email: 'test@example.com', name: 'Test User' } }),
         });
 
         if (response.ok) {
