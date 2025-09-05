@@ -1,8 +1,10 @@
 "use client";
 import { ReactNode } from "react";
-import { ConvexProvider, ConvexReactClient } from "convex/react";
+import { ConvexReactClient, ConvexProvider } from "convex/react";
 import { Toaster } from "sonner";
 import { RoleProvider } from "@/contexts/RoleContext";
+
+// Inizializza client Convex standard
 const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
 
 type ProvidersProps = {
@@ -11,7 +13,7 @@ type ProvidersProps = {
 
 export function Providers({ children }: ProvidersProps) {
   return (
-    // ConvexProvider: Gestisce la connessione al database
+    // ConvexProvider: Connessione standard a Convex
     <ConvexProvider client={convex}>
       {/* RoleProvider: Gestisce i ruoli utente (admin/tester) */}
       <RoleProvider>

@@ -1,35 +1,8 @@
-"use client";
-import { useUser } from '@auth0/nextjs-auth0';
-import { useEffect } from 'react';
 import { PersonIcon } from "@radix-ui/react-icons";
 import Link from 'next/link';
 
+// Pagina login pubblica
 export default function LoginPage() {
-  const { user, isLoading } = useUser();
-
-  // Se già autenticato, reindirizza alla home
-  useEffect(() => {
-    if (user) {
-      window.location.href = '/';
-    }
-  }, [user]);
-
-  // Mostra loading se sta controllando l'autenticazione
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-slate-600 dark:text-slate-400">Verifica autenticazione...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Se già autenticato, non mostrare il form
-  if (user) {
-    return null;
-  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 p-4">

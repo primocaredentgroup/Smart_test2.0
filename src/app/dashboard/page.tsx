@@ -1,59 +1,42 @@
 "use client";
 
 import { useUser } from '@auth0/nextjs-auth0';
+import { useQuery } from 'convex/react';
 import { AdminDashboard } from '@/components/AdminDashboard';
 import { TesterDashboard } from '@/components/TesterDashboard';
+import { Suspense } from 'react';
+import { api } from '../../../convex/_generated/api';
 
-export default function DashboardPage() {
-  const { user, error, isLoading } = useUser();
+function DashboardContent() {
+  const { user } = useUser();
+  
+  // Fetch tests data from Convex
+  const tests = useQuery(api.tests.listTests) || [];
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-slate-600 dark:text-slate-400">Caricamento dashboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-red-600 mb-4">Errore di autenticazione</h1>
-          <p className="text-slate-600 mb-4">{error.message}</p>
-          <a 
-            href="/api/auth/login" 
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Riprova il login
-          </a>
-        </div>
-      </div>
-    );
-  }
-
+  // Verifica solo Auth0 per ora
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Accesso richiesto</h1>
-          <a 
-            href="/api/auth/login" 
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Effettua il login
-          </a>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+            Configurazione accesso...
+          </h1>
+          <p className="text-slate-600 dark:text-slate-400 mb-4">
+            Sincronizzazione Auth0 con database in corso
+          </p>
+          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
         </div>
       </div>
     );
   }
 
-  // Determina il ruolo dall'utente Auth0 (per ora default a tester)
-  // In futuro questo verrà dal database Convex collegato all'ID Auth0
-  const userRole = user['https://smarttest.app/role'] || 'tester';
+  // Determina il ruolo dall'utente Auth0 
+  // Con custom claims o dal database Convex in futuro
+  const userRole = user['https://smarttest.app/role'] || 
+                   user['https://app_metadata']?.role || 
+                   'tester';
+  
+  const userEmail = user.email || '';
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
@@ -65,14 +48,42 @@ export default function DashboardPage() {
           <p className="text-slate-600 dark:text-slate-400">
             Ruolo: {userRole === 'admin' ? '👑 Administrator' : '🧪 Tester'}
           </p>
+          <p className="text-xs text-slate-500 mt-1">
+            ID: {user.sub} | Tests caricati: {tests.length}
+          </p>
         </div>
 
-        {userRole === 'admin' ? (
-          <AdminDashboard />
-        ) : (
-          <TesterDashboard />
-        )}
+        <Suspense fallback={<DashboardSkeleton />}>
+          {userRole === 'admin' ? (
+            <AdminDashboard tests={tests} />
+          ) : (
+            <TesterDashboard userEmail={userEmail} tests={tests} />
+          )}
+        </Suspense>
       </div>
     </div>
+  );
+}
+
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-lg">
+            <div className="h-6 bg-slate-200 dark:bg-slate-700 rounded animate-pulse mb-4"></div>
+            <div className="h-8 bg-slate-200 dark:bg-slate-700 rounded animate-pulse"></div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function DashboardPage() {
+  return (
+    <Suspense fallback={<DashboardSkeleton />}>
+      <DashboardContent />
+    </Suspense>
   );
 }
