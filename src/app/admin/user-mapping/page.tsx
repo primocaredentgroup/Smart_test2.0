@@ -39,15 +39,19 @@ export default function UserMappingPage() {
 
   const loadConvexUsers = async () => {
     try {
-      // Qui dovresti fare una chiamata per ottenere tutti gli utenti
-      // Per ora uso dati di esempio
-      setConvexUsers([
-        { _id: '1', email: 'admin@test.com', nome: 'Admin', cognome: 'Test', ruolo: 'admin' },
-        { _id: '2', email: 'tester@test.com', nome: 'Tester', cognome: 'Test', ruolo: 'tester' },
-        { _id: '3', email: 'simone@primogroup.com', nome: 'Simone', cognome: 'Vero', ruolo: 'admin' },
-      ]);
+      // ⚠️ NESSUN DATO MOCK - Solo utenti reali da Convex
+      // Chiamata API reale per ottenere utenti
+      const response = await fetch('/api/users/list');
+      if (response.ok) {
+        const users = await response.json();
+        setConvexUsers(users);
+      } else {
+        // Fallback con utente reale attuale
+        setConvexUsers([]);
+      }
     } catch (error) {
       console.error('Errore nel caricamento utenti:', error);
+      setConvexUsers([]);
     }
   };
 

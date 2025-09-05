@@ -36,14 +36,9 @@ export const seedDatabase = mutation({
     
     console.log("✅ Existing data cleaned");
     
-    // Crea utenti
-    console.log("👥 Creating users...");
-    const users = [
-      { email: "simone@example.com", name: "Simone Petretto", role: "tester" as const },
-      { email: "marco@example.com", name: "Marco Rossi", role: "tester" as const },
-      { email: "anna@example.com", name: "Anna Bianchi", role: "admin" as const },
-      { email: "giulia@example.com", name: "Giulia Verdi", role: "tester" as const },
-    ];
+    // ⚠️ NESSUN UTENTE MOCK - Solo utenti reali da Auth0
+    console.log("👥 Skipping user creation - only real Auth0 users allowed");
+    const users: never[] = [];
     
     const userIds: Record<string, any> = {};
     for (const user of users) {
@@ -111,71 +106,14 @@ export const seedDatabase = mutation({
         ...macroareaData,
         createdAt: Date.now() - Math.random() * 60 * 24 * 60 * 60 * 1000, // Random last 60 days
         updatedAt: Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000, // Random last 30 days
-        createdBy: "anna@example.com", // Admin
+        createdBy: "s.petretto@primogroup.it", // Real Admin user
       });
       macroareaIds[macroareaData.name] = macroareaId;
     }
     
-    // Crea test
-    console.log("🧪 Creating tests...");
-    const testsData = [
-      {
-        name: "Test Sistema Login",
-        jiraLink: "https://jira.example.com/TEST-1",
-        status: "open" as const,
-        creatorEmail: "simone@example.com",
-        macroareaNames: ["Preventivi", "Calendario"]
-      },
-      {
-        name: "Test Creazione Preventivi",
-        jiraLink: "https://jira.example.com/TEST-2",
-        status: "in_progress" as const,
-        creatorEmail: "marco@example.com",
-        macroareaNames: ["Preventivi"]
-      },
-      {
-        name: "Test Fatturazione Completa",
-        jiraLink: "https://jira.example.com/TEST-3",
-        status: "completed" as const,
-        creatorEmail: "anna@example.com",
-        macroareaNames: ["Fatturazione"]
-      },
-      {
-        name: "Test Calendario Appuntamenti",
-        jiraLink: "",
-        status: "failed" as const,
-        creatorEmail: "simone@example.com",
-        macroareaNames: ["Calendario"]
-      },
-      {
-        name: "Test Piano di Cura Nuovo",
-        jiraLink: "https://jira.example.com/TEST-5",
-        status: "completed" as const,
-        creatorEmail: "simone@example.com",
-        macroareaNames: ["Piani di Cura"]
-      },
-      {
-        name: "Test Consensi Digitali",
-        jiraLink: "https://jira.example.com/TEST-6",
-        status: "in_progress" as const,
-        creatorEmail: "giulia@example.com",
-        macroareaNames: ["Consensi"]
-      },
-      {
-        name: "Test Integrazione Pagamenti",
-        jiraLink: "https://jira.example.com/TEST-7",
-        status: "failed" as const,
-        creatorEmail: "marco@example.com",
-        macroareaNames: ["Fatturazione"]
-      },
-      {
-        name: "Test Backup Automatico",
-        jiraLink: "",
-        status: "completed" as const,
-        creatorEmail: "giulia@example.com",
-        macroareaNames: ["Preventivi", "Fatturazione"]
-      }
-    ];
+    // ⚠️ NESSUN TEST MOCK - Database pulito per test reali
+    console.log("🧪 Skipping test creation - clean database for real tests");
+    const testsData: never[] = [];
     
     for (const testData of testsData) {
       const selectedMacroareaIds = testData.macroareaNames.map(name => macroareaIds[name]);
@@ -242,10 +180,10 @@ export const seedDatabase = mutation({
     console.log("✅ Database seeded successfully!");
     
     return {
-      message: "Database seeded successfully",
-      users: users.length,
+      message: "Database seeded - only real macroareas, no mock data",
+      users: 0, // No mock users
       macroareas: macroareasData.length,
-      tests: testsData.length,
+      tests: 0, // No mock tests
     };
   },
 });

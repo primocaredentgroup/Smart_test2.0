@@ -97,7 +97,7 @@ export function MacroareaManager({ macroareas, onUpdate }: Props) {
         _id: `macro-${Date.now()}`,
         name: formData.name,
         standardTasks: validTasks.map(t => ({ ...t, id: t.id || `task-${Date.now()}-${Math.random()}` })),
-        changeLog: [{ timestamp: Date.now(), userEmail: "admin@example.com", action: "create" }]
+        changeLog: [{ timestamp: Date.now(), userEmail: "s.petretto@primogroup.it", action: "create" }]
       };
       updatedMacroareas.push(newMacroarea);
     }

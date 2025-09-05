@@ -1,79 +1,6 @@
-// Dati statici per UI frontend-only
+// ⚠️ NESSUN DATO MOCK - Solo dati reali da Convex
 export const staticData = {
-  tests: [
-    { 
-      _id: "test-1", 
-      name: "Test Sistema Login", 
-      jiraLink: "https://jira.example.com/TEST-1", 
-      status: "open", 
-      creatorEmail: "simone@example.com",
-      createdAt: "2024-01-15",
-      macroareaIds: ["preventivi", "calendario"]
-    },
-    { 
-      _id: "test-2", 
-      name: "Test Creazione Preventivi", 
-      jiraLink: "https://jira.example.com/TEST-2", 
-      status: "in_progress", 
-      creatorEmail: "marco@example.com",
-      createdAt: "2024-01-14",
-      macroareaIds: ["preventivi"]
-    },
-    { 
-      _id: "test-3", 
-      name: "Test Fatturazione Completa", 
-      jiraLink: "https://jira.example.com/TEST-3", 
-      status: "completed", 
-      creatorEmail: "anna@example.com",
-      createdAt: "2024-01-10",
-      macroareaIds: ["fatturazione"]
-    },
-    { 
-      _id: "test-4", 
-      name: "Test Calendario Appuntamenti", 
-      jiraLink: "", 
-      status: "failed", 
-      creatorEmail: "simone@example.com",
-      createdAt: "2024-01-08",
-      macroareaIds: ["calendario"]
-    },
-    { 
-      _id: "test-5", 
-      name: "Test Piano di Cura Nuovo", 
-      jiraLink: "https://jira.example.com/TEST-5", 
-      status: "completed", 
-      creatorEmail: "simone@example.com",
-      createdAt: "2024-01-12",
-      macroareaIds: ["piani-cura"]
-    },
-    { 
-      _id: "test-6", 
-      name: "Test Consensi Digitali", 
-      jiraLink: "https://jira.example.com/TEST-6", 
-      status: "in_progress", 
-      creatorEmail: "giulia@example.com",
-      createdAt: "2024-01-13",
-      macroareaIds: ["consensi"]
-    },
-    { 
-      _id: "test-7", 
-      name: "Test Integrazione Pagamenti", 
-      jiraLink: "https://jira.example.com/TEST-7", 
-      status: "failed", 
-      creatorEmail: "marco@example.com",
-      createdAt: "2024-01-11",
-      macroareaIds: ["fatturazione"]
-    },
-    { 
-      _id: "test-8", 
-      name: "Test Backup Automatico", 
-      jiraLink: "", 
-      status: "completed", 
-      creatorEmail: "giulia@example.com",
-      createdAt: "2024-01-09",
-      macroareaIds: ["sistema"]
-    }
-  ],
+  tests: [],
   
   macroareas: [
     { 
@@ -123,31 +50,8 @@ export const staticData = {
     }
   ],
 
-  // Task specifici per ogni test
-  testTasks: {
-    "test-1": [
-      { _id: "task-1-1", title: "Creazione nuovo preventivo", status: "done", notes: "Completato con successo", source: "macroarea" },
-      { _id: "task-1-2", title: "Prenotazione appuntamento", status: "done", notes: "", source: "macroarea" },
-      { _id: "task-1-3", title: "Test login utente", status: "todo", notes: "", source: "custom" },
-      { _id: "task-1-4", title: "Verifica permessi", status: "todo", notes: "", source: "custom" }
-    ],
-    "test-2": [
-      { _id: "task-2-1", title: "Creazione nuovo preventivo", status: "done", notes: "OK", source: "macroarea" },
-      { _id: "task-2-2", title: "Modifica preventivo esistente", status: "in_progress", notes: "In corso di verifica", source: "macroarea" },
-      { _id: "task-2-3", title: "Approvazione preventivo", status: "todo", notes: "", source: "macroarea" },
-      { _id: "task-2-4", title: "Invio preventivo al cliente", status: "todo", notes: "", source: "macroarea" }
-    ],
-    "test-3": [
-      { _id: "task-3-1", title: "Emissione fattura", status: "done", notes: "Fattura emessa correttamente", source: "macroarea" },
-      { _id: "task-3-2", title: "Verifica dati fiscali", status: "done", notes: "Dati verificati", source: "macroarea" },
-      { _id: "task-3-3", title: "Invio fattura elettronica", status: "done", notes: "SDI OK", source: "macroarea" }
-    ],
-    "test-4": [
-      { _id: "task-4-1", title: "Prenotazione appuntamento", status: "failed", notes: "Errore nel salvataggio", source: "macroarea" },
-      { _id: "task-4-2", title: "Visualizzazione calendario", status: "done", notes: "Vista funziona", source: "macroarea" },
-      { _id: "task-4-3", title: "Test notifiche email", status: "skipped", notes: "Non implementato", source: "custom" }
-    ]
-  }
+  // ⚠️ NESSUN TASK MOCK - Solo task reali da Convex
+  testTasks: {}
 };
 
 

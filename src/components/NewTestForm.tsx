@@ -71,7 +71,7 @@ export function NewTestForm({ macroareas }: Props) {
             </label>
             <input 
               className="w-full px-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              placeholder="es. Test Sistema Login"
+              placeholder="es. Test Creazione Preventivo Paziente"
               {...register("name", { required: "Il nome del test è obbligatorio" })} 
             />
             {errors.name && (
@@ -88,7 +88,7 @@ export function NewTestForm({ macroareas }: Props) {
               <Link2Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
               <input 
                 className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                placeholder="https://jira.example.com/..."
+                placeholder="https://jira.primogroup.it/..."
                 {...register("jiraLink")} 
               />
             </div>

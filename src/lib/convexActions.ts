@@ -32,10 +32,10 @@ export const calculateTestStatus = (tasks: Array<{status: string}>) => {
   return "open";
 };
 
-// Get current user email from custom auth or fallback to mock
+// Get current user email from Auth0/Convex auth
 export const getCurrentUserEmail = () => {
-  // This will be replaced by custom auth hook in components
-  return "simone@example.com"; // Fallback per SSR
+  // ⚠️ This should be replaced by useAuth hook in components
+  return "s.petretto@primogroup.it"; // Real user fallback
 };
 
 // Status display helpers
