@@ -2,7 +2,7 @@
 import { useUser } from '@auth0/nextjs-auth0';
 import { useEffect } from 'react';
 import { PersonIcon } from "@radix-ui/react-icons";
-import Link from 'next/link';
+// Rimosso Link per evitare prefetch CORS
 
 // Client Component con check auth
 export default function LoginPage() {

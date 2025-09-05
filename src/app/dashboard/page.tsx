@@ -6,7 +6,7 @@ import { AdminDashboard } from '@/components/AdminDashboard';
 import { TesterDashboard } from '@/components/TesterDashboard';
 import { Suspense } from 'react';
 import { api } from '../../../convex/_generated/api';
-import Link from 'next/link';
+// Rimosso Link per evitare prefetch CORS
 
 function DashboardContent() {
   const { user, error, isLoading } = useUser();

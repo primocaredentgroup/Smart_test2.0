@@ -1,7 +1,7 @@
 "use client";
 import { useUser } from '@auth0/nextjs-auth0';
 import { useEffect } from 'react';
-import Link from "next/link";
+// Rimosso Link per evitare prefetch che causa CORS
 
 // Client Component con auth check
 export default function HomePage() {
@@ -32,12 +32,12 @@ export default function HomePage() {
               🔐 Accedi
             </button>
             
-            <Link
-              href="/signup"
+            <button
+              onClick={() => window.location.href = '/signup'}
               className="block w-full bg-white dark:bg-slate-800 text-slate-900 dark:text-white px-6 py-3 rounded-xl font-medium border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
             >
               📝 Registrati
-            </Link>
+            </button>
           </div>
           
           <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
