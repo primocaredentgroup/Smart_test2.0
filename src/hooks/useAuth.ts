@@ -90,6 +90,10 @@ export function useAuth() {
     setUser(userData);
   };
 
+  const getUserEmail = () => {
+    return user?.email || '';
+  };
+
   return {
     user,
     isLoading,
@@ -98,5 +102,6 @@ export function useAuth() {
     loginUser,
     logout,
     error,
+    getUserEmail,
   };
 }

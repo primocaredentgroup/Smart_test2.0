@@ -2,7 +2,7 @@ import { CheckCircledIcon, ClockIcon, CrossCircledIcon, CircleIcon } from "@radi
 
 type Props = { status?: string };
 
-const statusConfig: Record<string, { label: string; className: string; icon: any }> = {
+const statusConfig: Record<string, { label: string; className: string; icon: React.ElementType }> = {
   open: { 
     label: "Da testare", 
     className: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 ring-1 ring-slate-200 dark:ring-slate-700", 

@@ -37,7 +37,7 @@ export function ProtectedRoute({ children, fallback }: ProtectedRouteProps) {
             Accesso Richiesto
           </h2>
           <p className="text-slate-600 dark:text-slate-400 mb-6">
-            Devi effettuare l'accesso per visualizzare questa pagina.
+            Devi effettuare l&apos;accesso per visualizzare questa pagina.
           </p>
           <button
             onClick={login}

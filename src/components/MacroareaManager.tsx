@@ -34,7 +34,7 @@ export function MacroareaManager({ macroareas, onUpdate }: Props) {
     setEditingId(macroarea._id);
     setFormData({
       name: macroarea.name,
-      tasks: macroarea.standardTasks.map(t => ({ ...t }))
+      tasks: macroarea.standardTasks.map(t => ({ ...t, description: t.description || '' }))
     });
     setShowNewForm(false);
   }
@@ -125,7 +125,7 @@ export function MacroareaManager({ macroareas, onUpdate }: Props) {
         </div>
         <button
           onClick={startNew}
-          disabled={showNewForm || editingId}
+          disabled={showNewForm || !!editingId}
           className="inline-flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-xl font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           <PlusIcon className="w-5 h-5" />

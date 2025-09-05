@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 /**
  * Endpoint per il profilo utente Auth0
  * Questo endpoint viene chiamato dall'SDK Auth0 per ottenere le informazioni dell'utente
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   // Per ora restituiamo un errore 401, l'SDK gestirà il caso
   // In una implementazione completa, qui verificheremmo il token di sessione
   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

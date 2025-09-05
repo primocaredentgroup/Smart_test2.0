@@ -154,7 +154,7 @@ export default function UserMappingPage() {
       <div className="bg-green-50 p-6 rounded-lg mb-8">
         <h2 className="text-xl font-semibold mb-4">🎯 Nuova Mappatura</h2>
         <p className="mb-4 text-gray-700">
-          Seleziona l'utente Convex a cui vuoi mappare il tuo account Auth0:
+          Seleziona l&apos;utente Convex a cui vuoi mappare il tuo account Auth0:
         </p>
         
         <div className="space-y-4">
@@ -211,8 +211,8 @@ export default function UserMappingPage() {
         <ol className="list-decimal list-inside space-y-2 text-gray-700">
           <li><strong>Login Auth0:</strong> Quando fai login, Auth0 fornisce i tuoi dati reali (email, nome, ecc.)</li>
           <li><strong>Mappatura:</strong> Questi dati vengono mappati a un utente esistente in Convex</li>
-          <li><strong>Sincronizzazione:</strong> Il sistema crea/aggiorna l'utente in Convex basandosi sui dati Auth0</li>
-          <li><strong>Dashboard:</strong> L'app mostra i dati dall'utente Convex mappato</li>
+          <li><strong>Sincronizzazione:</strong> Il sistema crea/aggiorna l&apos;utente in Convex basandosi sui dati Auth0</li>
+          <li><strong>Dashboard:</strong> L&apos;app mostra i dati dall&apos;utente Convex mappato</li>
         </ol>
       </div>
     </div>

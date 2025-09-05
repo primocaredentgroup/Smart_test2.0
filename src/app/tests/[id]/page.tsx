@@ -18,7 +18,7 @@ export default function TestDetailPage({ params }: Params) {
   // Extract ID from params
   const [testId, setTestId] = useState<string | null>(null);
   const [showAddTaskModal, setShowAddTaskModal] = useState(false);
-  const [customTasks, setCustomTasks] = useState<any[]>([]);
+  const [customTasks, setCustomTasks] = useState<Array<{ _id: string; title: string; description: string; status: string; }>>([]);
   const [saving, setSaving] = useState(false);
   
   // Convex mutations and Auth
@@ -31,13 +31,14 @@ export default function TestDetailPage({ params }: Params) {
   }, [params]);
 
   // Convex queries
-  const test = useQuery(api.tests.getTestById, testId ? { testId } : "skip");
-  const tasks = useQuery(api.testTasks.getTasksByTestId, testId ? { testId } : "skip");
+  const test = useQuery(api.tests.getTestById, testId ? { testId: testId as import('../../../../convex/_generated/dataModel').Id<"tests"> } : "skip");
+  const tasks = useQuery(api.testTasks.getTasksByTestId, testId ? { testId: testId as import('../../../../convex/_generated/dataModel').Id<"tests"> } : "skip");
 
   function addCustomTask(taskTitle: string) {
     const newTask = {
       _id: `custom-${Date.now()}`,
       title: taskTitle,
+      description: `Task personalizzato: ${taskTitle}`,
       status: "todo",
       notes: "",
       source: "custom"
@@ -66,8 +67,8 @@ export default function TestDetailPage({ params }: Params) {
       // Se il status è cambiato, aggiorna nel database
       if (currentTestStatus !== test.status) {
         await updateTestStatus({
-          testId: testId as any,
-          status: currentTestStatus as any,
+          testId: testId as import('../../../../convex/_generated/dataModel').Id<"tests">,
+          status: currentTestStatus as "open" | "in_progress" | "completed" | "failed",
           userEmail: getUserEmail(),
         });
         
@@ -216,8 +217,7 @@ export default function TestDetailPage({ params }: Params) {
         </div>
         
         <TestChecklist 
-          tasks={allTasks as any} 
-          onAddCustomTask={addCustomTask}
+          tasks={allTasks} 
           onDeleteCustomTask={deleteCustomTask}
         />
       </div>
@@ -229,7 +229,7 @@ export default function TestDetailPage({ params }: Params) {
             <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200">
               <div className="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-medium">
-                Status del test cambierà da "{getStatusLabel(test?.status || '')}" a "{getStatusLabel(currentTestStatus)}"
+                Status del test cambierà da &quot;{getStatusLabel(test?.status || '')}&quot; a &quot;{getStatusLabel(currentTestStatus)}&quot;
               </span>
             </div>
           </div>

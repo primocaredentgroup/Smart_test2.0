@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Cross2Icon, CheckIcon, PlusIcon } from "@radix-ui/react-icons";
+import { Cross2Icon, PlusIcon } from "@radix-ui/react-icons";
 
 type Props = {
   isOpen: boolean;
@@ -70,7 +70,7 @@ export function AddCustomTaskModal({ isOpen, onClose, onAdd }: Props) {
               
               <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3">
                 <div className="text-sm text-blue-700 dark:text-blue-300">
-                  <strong>Info:</strong> Il task verrà creato con stato "Da testare" e potrà essere modificato o eliminato fino al salvataggio del test.
+                  <strong>Info:</strong> Il task verrà creato con stato &quot;Da testare&quot; e potrà essere modificato o eliminato fino al salvataggio del test.
                 </div>
               </div>
             </div>

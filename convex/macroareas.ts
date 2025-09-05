@@ -121,10 +121,10 @@ export const deleteMacroarea = mutation({
     }
     
     // Verifica che non ci siano test che usano questa macroarea
-    const testsUsingMacroarea = await ctx.db
-      .query("tests")
-      .filter((q) => q.field("macroareaIds").contains(macroareaId))
-      .collect();
+    const allTests = await ctx.db.query("tests").collect();
+    const testsUsingMacroarea = allTests.filter(test => 
+      test.macroareaIds.includes(macroareaId)
+    );
     
     if (testsUsingMacroarea.length > 0) {
       throw new Error(`Cannot delete macroarea: ${testsUsingMacroarea.length} tests are using it`);
@@ -156,10 +156,10 @@ export const getMacroareaStats = query({
     const stats = await Promise.all(
       macroareas.map(async (macroarea) => {
         // Conta i test che usano questa macroarea
-        const testsCount = await ctx.db
-          .query("tests")
-          .filter((q) => q.field("macroareaIds").contains(macroarea._id))
-          .collect();
+        const allTests = await ctx.db.query("tests").collect();
+        const testsCount = allTests.filter(test => 
+          test.macroareaIds.includes(macroarea._id)
+        );
         
         return {
           macroarea,

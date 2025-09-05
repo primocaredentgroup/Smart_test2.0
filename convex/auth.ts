@@ -19,10 +19,8 @@ export const createUser = mutation({
     email: v.string(),
     name: v.string(),
     role: v.optional(v.union(v.literal("admin"), v.literal("tester"))),
-    authProvider: v.optional(v.string()),
-    authId: v.optional(v.string()),
   },
-  handler: async (ctx, { email, name, role = "tester", authProvider = "custom", authId }) => {
+  handler: async (ctx, { email, name, role = "tester" }) => {
     // Controlla se utente già exists
     const existingUser = await ctx.db
       .query("users")
@@ -38,11 +36,7 @@ export const createUser = mutation({
       email,
       name,
       role,
-      authProvider,
-      authId,
-      isActive: true,
       createdAt: Date.now(),
-      updatedAt: Date.now(),
     });
 
     console.log(`✅ Nuovo utente creato: ${email} (${role})`);
@@ -83,10 +77,7 @@ export const loginUser = mutation({
         email: validUser.email,
         name: validUser.name,
         role: validUser.role as "admin" | "tester",
-        authProvider: "custom",
-        isActive: true,
         createdAt: Date.now(),
-        updatedAt: Date.now(),
       });
 
       user = await ctx.db.get(userId);

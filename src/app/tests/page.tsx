@@ -74,7 +74,7 @@ export default function TestsPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {tests.map((test: any) => (
+          {tests.map((test) => (
             <div 
               key={String(test._id)} 
               className="bg-white dark:bg-slate-800 rounded-2xl p-6 shadow-lg border border-slate-200/50 dark:border-slate-700/50 hover:shadow-xl transition-all duration-200 group"
@@ -121,7 +121,7 @@ export default function TestsPage() {
               {/* Macroaree Tags */}
               {test.macroareaIds && test.macroareaIds.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {test.macroareaIds.slice(0, 3).map((id: string, index: number) => (
+                  {test.macroareaIds.slice(0, 3).map((id: string) => (
                     <span 
                       key={id}
                       className="px-2 py-1 bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-400 rounded-md text-xs"

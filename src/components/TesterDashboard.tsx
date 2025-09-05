@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
 import { StatusBadge } from "@/components/StatusBadge";
-import { CheckCircledIcon, ClockIcon, PersonIcon, CalendarIcon, TrendingUpIcon } from "@radix-ui/react-icons";
+import { CheckCircledIcon, ClockIcon, PersonIcon, CalendarIcon, ArrowUpIcon } from "@radix-ui/react-icons";
 
 type Props = {
   userEmail: string;
-  tests: any[];
+  tests: Array<{ _id: string; name: string; status: string; createdAt: number; creatorEmail?: string; jiraLink?: string; }>;
 };
 
 export function TesterDashboard({ userEmail, tests }: Props) {
@@ -13,7 +13,7 @@ export function TesterDashboard({ userEmail, tests }: Props) {
   const myTests = tests.filter(t => t.creatorEmail === userEmail);
   const myCompletedTests = myTests.filter(t => t.status === "completed");
   const myActiveTests = myTests.filter(t => t.status === "in_progress" || t.status === "open");
-  const myFailedTests = myTests.filter(t => t.status === "failed");
+  // const myFailedTests = myTests.filter(t => t.status === "failed"); // Commented out as not used
   
   // Ultimi 3 test dell'utente
   const recentMyTests = myTests.slice(0, 3);
@@ -80,7 +80,7 @@ export function TesterDashboard({ userEmail, tests }: Props) {
               <p className="text-3xl font-bold text-purple-600">{weeklyCompleted}</p>
             </div>
             <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/20 rounded-xl flex items-center justify-center">
-              <TrendingUpIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              <ArrowUpIcon className="w-6 h-6 text-purple-600 dark:text-purple-400" />
             </div>
           </div>
         </div>
@@ -164,7 +164,7 @@ export function TesterDashboard({ userEmail, tests }: Props) {
         <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl p-6 text-white shadow-lg">
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-              <TrendingUpIcon className="w-6 h-6" />
+              <ArrowUpIcon className="w-6 h-6" />
             </div>
             <div>
               <h3 className="text-lg font-semibold">Il tuo progresso</h3>

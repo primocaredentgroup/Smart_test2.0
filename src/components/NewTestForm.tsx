@@ -7,7 +7,7 @@ import { api } from "../../convex/_generated/api";
 import { useAuth } from "@/hooks/useAuth";
 import { CheckIcon, Link2Icon } from "@radix-ui/react-icons";
 
-type Props = { macroareas: Array<{ _id?: string; id?: string; name: string; standardTasks: any[] }> };
+type Props = { macroareas: Array<{ _id?: string; id?: string; name: string; standardTasks: Array<{ id: string; title: string; description: string; }> }> };
 
 type FormValues = {
   name: string;
@@ -41,7 +41,7 @@ export function NewTestForm({ macroareas }: Props) {
         name: values.name,
         jiraLink: values.jiraLink || undefined,
         creatorEmail: getUserEmail(),
-        macroareaIds: selectedIds,
+        macroareaIds: selectedIds as import('../../convex/_generated/dataModel').Id<"macroareas">[],
       });
       
       console.log("✅ Test creato con successo:", testId);

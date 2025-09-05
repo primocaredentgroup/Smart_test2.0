@@ -5,13 +5,13 @@
  * Controlla ogni richiesta e gestisce l'autenticazione automaticamente.
  */
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 /**
  * Per ora, lasciamo passare tutto e lasciamo che Auth0 
  * gestisca l'autenticazione a livello di componente
  */
-export function middleware(request: NextRequest) {
+export function middleware() {
   return NextResponse.next();
 }
 

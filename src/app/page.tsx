@@ -17,7 +17,6 @@ import {
   CrossCircledIcon,
   CalendarIcon,
   ArrowUpIcon,
-  ExternalLinkIcon,
   PlusIcon
 } from "@radix-ui/react-icons";
 
@@ -57,7 +56,7 @@ function HomePageContent() {
 }
 
 // Dashboard Admin Component
-function AdminDashboard({ tests }: { tests: any[] }) {
+function AdminDashboard({ tests }: { tests: Array<{ _id: string; name: string; status: string; createdAt: number; creatorEmail?: string; jiraLink?: string; }> }) {
   // Calcoli generali
   const totalTests = tests.length;
   const completedTests = tests.filter(t => t.status === "completed").length;
@@ -68,6 +67,7 @@ function AdminDashboard({ tests }: { tests: any[] }) {
   // Analisi per tester
   const testerStats = tests.reduce((acc, test) => {
     const email = test.creatorEmail;
+    if (!email) return acc; // Skip if email is undefined
     if (!acc[email]) {
       acc[email] = { total: 0, completed: 0, inProgress: 0, failed: 0 };
     }
@@ -76,7 +76,7 @@ function AdminDashboard({ tests }: { tests: any[] }) {
     if (test.status === "in_progress") acc[email].inProgress++;
     if (test.status === "failed") acc[email].failed++;
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, { total: number; completed: number; inProgress: number; failed: number; }>);
 
   const topTesters = Object.entries(testerStats)
     .sort(([,a], [,b]) => b.completed - a.completed)
@@ -348,7 +348,7 @@ function AdminDashboard({ tests }: { tests: any[] }) {
 }
 
 // Dashboard Tester Component
-function TesterDashboard({ userEmail, tests }: { userEmail: string; tests: any[] }) {
+function TesterDashboard({ userEmail, tests }: { userEmail: string; tests: Array<{ _id: string; name: string; status: string; createdAt: number; creatorEmail?: string; jiraLink?: string; }> }) {
   // Filtra solo i test dell'utente corrente
   const myTests = tests.filter(t => t.creatorEmail === userEmail);
   const myCompletedTests = myTests.filter(t => t.status === "completed");

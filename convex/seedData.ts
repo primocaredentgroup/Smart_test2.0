@@ -38,17 +38,6 @@ export const seedDatabase = mutation({
     
     // ⚠️ NESSUN UTENTE MOCK - Solo utenti reali da Auth0
     console.log("👥 Skipping user creation - only real Auth0 users allowed");
-    const users: never[] = [];
-    
-    const userIds: Record<string, any> = {};
-    for (const user of users) {
-      const userId = await ctx.db.insert("users", {
-        ...user,
-        createdAt: Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000, // Random last 30 days
-        lastLogin: Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000, // Random last 7 days
-      });
-      userIds[user.email] = userId;
-    }
     
     // Crea macroaree
     console.log("🏗️ Creating macroareas...");
@@ -113,69 +102,6 @@ export const seedDatabase = mutation({
     
     // ⚠️ NESSUN TEST MOCK - Database pulito per test reali
     console.log("🧪 Skipping test creation - clean database for real tests");
-    const testsData: never[] = [];
-    
-    for (const testData of testsData) {
-      const selectedMacroareaIds = testData.macroareaNames.map(name => macroareaIds[name]);
-      const createdAt = Date.now() - Math.random() * 14 * 24 * 60 * 60 * 1000; // Random last 14 days
-      
-      const testId = await ctx.db.insert("tests", {
-        name: testData.name,
-        jiraLink: testData.jiraLink || undefined,
-        status: testData.status,
-        creatorEmail: testData.creatorEmail,
-        macroareaIds: selectedMacroareaIds,
-        createdAt,
-        updatedAt: createdAt + Math.random() * 24 * 60 * 60 * 1000, // Updated within 24h after creation
-        completedAt: testData.status === "completed" 
-          ? createdAt + Math.random() * 7 * 24 * 60 * 60 * 1000 
-          : undefined,
-      });
-      
-      // Crea task per il test
-      const macroareas = await Promise.all(selectedMacroareaIds.map(id => ctx.db.get(id)));
-      
-      for (const macroarea of macroareas) {
-        if (!macroarea) continue;
-        
-        for (const standardTask of macroarea.standardTasks) {
-          const taskStatus = testData.status === "completed" ? "done" :
-                           testData.status === "failed" ? "failed" :
-                           testData.status === "in_progress" ? 
-                             (Math.random() > 0.5 ? "done" : "todo") : "todo";
-          
-          await ctx.db.insert("testTasks", {
-            testId,
-            title: standardTask.title,
-            description: standardTask.description,
-            status: taskStatus,
-            notes: taskStatus === "done" ? "Completato con successo" : 
-                   taskStatus === "failed" ? "Errore durante il test" : "",
-            source: "macroarea",
-            sourceId: standardTask.id,
-            createdAt,
-            updatedAt: createdAt + Math.random() * 24 * 60 * 60 * 1000,
-            completedAt: taskStatus === "done" 
-              ? createdAt + Math.random() * 7 * 24 * 60 * 60 * 1000 
-              : undefined,
-          });
-        }
-      }
-      
-      // Aggiungi alcuni task custom casuali
-      if (Math.random() > 0.6) {
-        await ctx.db.insert("testTasks", {
-          testId,
-          title: "Test configurazione speciale",
-          description: "Verifica configurazione custom per questo test",
-          status: Math.random() > 0.5 ? "done" : "todo",
-          notes: "Task custom aggiunto dal tester",
-          source: "custom",
-          createdAt: createdAt + 60 * 60 * 1000, // 1 hour after test creation
-          updatedAt: createdAt + 2 * 60 * 60 * 1000,
-        });
-      }
-    }
     
     console.log("✅ Database seeded successfully!");
     

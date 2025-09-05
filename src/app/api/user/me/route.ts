@@ -8,7 +8,7 @@ import { api } from '../../../../../convex/_generated/api';
  */
 
 // GET non più supportato - solo autenticazione con Auth0 reale
-export async function GET(request: NextRequest) {
+export async function GET() {
   return NextResponse.json({ 
     error: 'Accesso non autorizzato. Login richiesto tramite Auth0.' 
   }, { status: 401 });
@@ -25,22 +25,18 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleUserSync(auth0User: any) {
+async function handleUserSync(auth0User: { email?: string; given_name?: string; family_name?: string; name?: string; sub?: string; }) {
   try {
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
-    
-    let userEmail: string;
-    let userName: string;
-    let userSurname: string;
     
     if (!auth0User || !auth0User.email) {
       throw new Error('Dati Auth0 non forniti. Login richiesto.');
     }
 
     // Usa SOLO i dati REALI da Auth0
-    userEmail = auth0User.email;
-    userName = auth0User.given_name || auth0User.name?.split(' ')[0] || 'Utente';
-    userSurname = auth0User.family_name || auth0User.name?.split(' ').slice(1).join(' ') || '';
+    const userEmail = auth0User.email;
+    const userName = auth0User.given_name || auth0User.name?.split(' ')[0] || 'Utente';
+    const userSurname = auth0User.family_name || auth0User.name?.split(' ').slice(1).join(' ') || '';
     
     console.log('🔍 Sincronizzazione con dati Auth0 REALI:', {
       email: userEmail,
@@ -52,7 +48,7 @@ async function handleUserSync(auth0User: any) {
     // Usa upsertUser che gestisce sia creazione che aggiornamento
     console.log('🔄 Sincronizzando utente con Convex:', userEmail);
     
-    const userId = await convex.mutation(api.users.upsertUser, {
+    await convex.mutation(api.users.upsertUser, {
       email: userEmail,
       name: `${userName} ${userSurname}`.trim(),
       role: 'admin' as const // Puoi personalizzare questa logica

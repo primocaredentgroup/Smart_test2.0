@@ -7,23 +7,23 @@ import { useAuth } from "@/hooks/useAuth";
 import { useRole } from "@/contexts/RoleContext";
 import { toast } from "sonner";
 
-interface User {
-  _id: string;
-  _creationTime: number;
-  email: string;
-  name?: string;
-  role: 'admin' | 'tester';
-  createdAt: number;
-  lastLogin: number;
-}
+// interface User {
+//   _id: string;
+//   _creationTime: number;
+//   email: string;
+//   name?: string;
+//   role: 'admin' | 'tester';
+//   createdAt: number;
+//   lastLogin: number;
+// }
 
-interface UserWithStats {
-  user: User;
-  totalTests: number;
-  completedTests: number;
-  activeTests: number;
-  completionRate: number;
-}
+// interface UserWithStats {
+//   user: User;
+//   totalTests: number;
+//   completedTests: number;
+//   activeTests: number;
+//   completionRate: number;
+// }
 
 export default function UsersPage() {
   const { user: currentUser } = useAuth();
@@ -48,7 +48,7 @@ export default function UsersPage() {
 
     try {
       await updateUserRole({
-        userId: userId as any,
+        userId: userId as import('../../../../convex/_generated/dataModel').Id<"users">,
         newRole,
         updatedBy: currentUser.email
       });
@@ -56,7 +56,7 @@ export default function UsersPage() {
       toast.success(`Ruolo di ${userName} aggiornato a ${newRole === 'admin' ? 'Admin' : 'Tester'}`);
     } catch (error) {
       console.error('Errore aggiornamento ruolo:', error);
-      toast.error("Errore durante l'aggiornamento del ruolo");
+      toast.error("Errore durante l&apos;aggiornamento del ruolo");
     }
   };
 
@@ -249,9 +249,9 @@ export default function UsersPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                         <div>
-                          <div>{formatDaysAgo(userStat.user.lastLogin)}</div>
+                          <div>{userStat.user.lastLogin ? formatDaysAgo(userStat.user.lastLogin) : 'Mai'}</div>
                           <div className="text-xs text-gray-400 dark:text-gray-500">
-                            {formatDate(userStat.user.lastLogin)}
+                            {userStat.user.lastLogin ? formatDate(userStat.user.lastLogin) : '-'}
                           </div>
                         </div>
                       </td>
@@ -286,7 +286,7 @@ export default function UsersPage() {
         {/* Info Footer */}
         <div className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
           🔐 Tutti gli utenti sono sincronizzati automaticamente da Auth0. 
-          I cambi di ruolo vengono registrati nell'audit log.
+          I cambi di ruolo vengono registrati nell&apos;audit log.
         </div>
       </div>
     </div>

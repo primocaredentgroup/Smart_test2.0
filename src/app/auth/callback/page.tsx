@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 export default function CallbackPage() {
   const [status, setStatus] = useState('🔄 Processando...');
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const [userInfo, setUserInfo] = useState<{ email?: string; name?: string; picture?: string; sub?: string; } | null>(null);
 
   useEffect(() => {
     const processAuth0Callback = async () => {

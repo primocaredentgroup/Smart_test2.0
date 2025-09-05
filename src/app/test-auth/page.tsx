@@ -32,7 +32,7 @@ export default function TestAuthPage() {
       </div>
 
       <div style={{ marginBottom: "20px", padding: "15px", backgroundColor: "#fff8f0", border: "1px solid #ff9900", borderRadius: "5px" }}>
-        <h3>🔍 Cosa succede quando clicchi "Prova Login Auth0":</h3>
+        <h3>🔍 Cosa succede quando clicchi &quot;Prova Login Auth0&quot;:</h3>
         <ol>
           <li>Verrai reindirizzato alla pagina di login di Auth0</li>
           <li>Potrai fare login con email/password o provider social</li>

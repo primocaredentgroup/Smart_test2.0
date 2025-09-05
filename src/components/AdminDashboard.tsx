@@ -13,7 +13,7 @@ import {
 } from "@radix-ui/react-icons";
 
 type Props = {
-  tests: any[];
+  tests: Array<{ _id: string; name: string; status: string; createdAt: number; creatorEmail?: string; jiraLink?: string; }>;
 };
 
 export function AdminDashboard({ tests }: Props) {
@@ -27,6 +27,7 @@ export function AdminDashboard({ tests }: Props) {
   // Analisi per tester
   const testerStats = tests.reduce((acc, test) => {
     const email = test.creatorEmail;
+    if (!email) return acc; // Skip if email is undefined
     if (!acc[email]) {
       acc[email] = { total: 0, completed: 0, inProgress: 0, failed: 0 };
     }
@@ -35,7 +36,7 @@ export function AdminDashboard({ tests }: Props) {
     if (test.status === "in_progress") acc[email].inProgress++;
     if (test.status === "failed") acc[email].failed++;
     return acc;
-  }, {} as Record<string, any>);
+  }, {} as Record<string, { total: number; completed: number; failed: number; inProgress: number; }>);
 
   const topTesters = Object.entries(testerStats)
     .sort(([,a], [,b]) => b.completed - a.completed)

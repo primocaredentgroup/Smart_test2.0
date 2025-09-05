@@ -3,8 +3,7 @@ import { useState } from "react";
 import { staticData } from "@/lib/dataClient";
 import { useRole } from "@/contexts/RoleContext";
 import { MacroareaManager } from "@/components/MacroareaManager";
-import { PlusIcon, GearIcon, LayersIcon, CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { redirect } from "next/navigation";
+import { GearIcon, LayersIcon, CheckCircledIcon, ExclamationTriangleIcon } from "@radix-ui/react-icons";
 
 export default function AdminPage() {
   const { isAdmin } = useRole();
@@ -25,8 +24,8 @@ export default function AdminPage() {
     );
   }
 
-  function handleMacroareasUpdate(updatedMacroareas: any[]) {
-    setMacroareas(updatedMacroareas);
+  function handleMacroareasUpdate(updatedMacroareas: Array<{ _id?: string; name: string; standardTasks: Array<{ id: string; title: string; description?: string; }> }>) {
+    setMacroareas(updatedMacroareas as typeof staticData.macroareas);
     // TODO: In futuro, questa sarà una chiamata API/Convex per salvare nel database
     console.log("Macroaree aggiornate:", updatedMacroareas);
   }
@@ -84,7 +83,7 @@ export default function AdminPage() {
 
       {/* Macroarea Management */}
       <MacroareaManager 
-        macroareas={macroareas as any[]}
+        macroareas={macroareas}
         onUpdate={handleMacroareasUpdate}
       />
 
