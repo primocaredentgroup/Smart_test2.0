@@ -1,5 +1,5 @@
 "use client";
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser } from '@/contexts/AuthContext';
 import { useEffect } from 'react';
 import { PersonIcon } from "@radix-ui/react-icons";
 // Rimosso Link per evitare prefetch CORS
@@ -11,7 +11,8 @@ export default function LoginPage() {
 
   // Se già autenticato, reindirizza al dashboard
   useEffect(() => {
-    if (user && !isLoading) {
+    console.log('🔍 Login Auth Debug:', { user, isLoading, hasActualUser: !!user?.email });
+    if (user?.email && !isLoading) {
       window.location.href = '/dashboard';
     }
   }, [user, isLoading]);
@@ -26,7 +27,7 @@ export default function LoginPage() {
   }
 
   // Se già autenticato, non mostrare form
-  if (user) {
+  if (user?.email) {
     return null;
   }
 

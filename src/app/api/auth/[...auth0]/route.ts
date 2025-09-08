@@ -24,7 +24,19 @@ export async function GET(request: NextRequest) {
       const logoutUrl = `${domain}/v2/logout?` +
         `client_id=${clientId}&` +
         `returnTo=${encodeURIComponent(baseUrl)}`;
-      return NextResponse.redirect(logoutUrl);
+      
+      const logoutResponse = NextResponse.redirect(logoutUrl);
+      
+      // Clear session cookie
+      logoutResponse.cookies.set('auth0_session', '', {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 0,
+        path: '/'
+      });
+      
+      return logoutResponse;
 
     case 'callback':
       const { searchParams } = new URL(request.url);
@@ -60,23 +72,45 @@ export async function GET(request: NextRequest) {
 
         console.log('✅ Token exchange successful');
         
-        // Qui dovremmo impostare i cookie di sessione, per ora redirect
+        // Decode id_token to get user info
+        let userInfo = null;
+        if (tokens.id_token) {
+          try {
+            // Decode JWT payload (base64)
+            const payload = tokens.id_token.split('.')[1];
+            const decoded = JSON.parse(Buffer.from(payload, 'base64').toString());
+            userInfo = decoded;
+            console.log('✅ User info decoded:', { sub: decoded.sub, email: decoded.email });
+          } catch (decodeError) {
+            console.log('❌ Failed to decode id_token:', decodeError);
+          }
+        }
+        
         const response = NextResponse.redirect(baseUrl + '/dashboard');
         
-        // Set httpOnly cookies for tokens
-        response.cookies.set('auth0_access_token', tokens.access_token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax',
-          maxAge: tokens.expires_in || 3600
-        });
-        
-        if (tokens.id_token) {
-          response.cookies.set('auth0_id_token', tokens.id_token, {
+        // Create a session cookie that Auth0Provider can understand
+        if (userInfo) {
+          const sessionData = {
+            user: {
+              sub: userInfo.sub,
+              email: userInfo.email,
+              name: userInfo.name,
+              nickname: userInfo.nickname,
+              picture: userInfo.picture,
+              updated_at: userInfo.updated_at
+            },
+            accessToken: tokens.access_token,
+            idToken: tokens.id_token,
+            expiresAt: Date.now() + (tokens.expires_in * 1000)
+          };
+          
+          // Set a session cookie with JSON data
+          response.cookies.set('auth0_session', JSON.stringify(sessionData), {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'lax',
-            maxAge: tokens.expires_in || 3600
+            maxAge: tokens.expires_in || 3600,
+            path: '/'
           });
         }
 

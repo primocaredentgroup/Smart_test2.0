@@ -1,5 +1,5 @@
 "use client";
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser } from '@/contexts/AuthContext';
 import { useEffect } from 'react';
 // Rimosso Link per evitare prefetch che causa CORS
 
@@ -9,7 +9,8 @@ export default function HomePage() {
 
   // Se autenticato, reindirizza al dashboard
   useEffect(() => {
-    if (user && !isLoading) {
+    console.log('🔍 Homepage Auth Debug:', { user, isLoading, hasActualUser: !!user?.email });
+    if (user?.email && !isLoading) {
       window.location.href = '/dashboard';
     }
   }, [user, isLoading]);
