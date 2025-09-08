@@ -57,7 +57,7 @@ function DashboardContent() {
   }
 
   // Not authenticated
-  if (!user) {
+  if (!isLoading && !user?.email) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -80,26 +80,26 @@ function DashboardContent() {
 
   // Determina il ruolo dall'utente Auth0 
   // Con custom claims o dal database Convex in futuro
-  const customRole = user['https://smarttest.app/role'] as string | undefined;
-  const appMetadata = user['https://app_metadata'] as { role?: string } | undefined;
+  const customRole = user?.['https://smarttest.app/role'] as string | undefined;
+  const appMetadata = user?.['https://app_metadata'] as { role?: string } | undefined;
   const userRole = customRole || 
                    appMetadata?.role || 
                    'tester';
   
-  const userEmail = user.email || '';
+  const userEmail = user?.email || '';
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-            Benvenuto, {user.name || user.email}!
+            Benvenuto, {user?.name || user?.email}!
           </h1>
           <p className="text-slate-600 dark:text-slate-400">
             Ruolo: {userRole === 'admin' ? '👑 Administrator' : '🧪 Tester'}
           </p>
           <p className="text-xs text-slate-500 mt-1">
-            ID: {user.sub} | Tests caricati: {tests.length}
+            ID: {user?.sub} | Tests caricati: {tests.length}
           </p>
         </div>
 

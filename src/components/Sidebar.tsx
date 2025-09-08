@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { DashboardIcon, LayersIcon, GearIcon, CheckCircledIcon, PersonIcon } from "@radix-ui/react-icons";
+import { DashboardIcon, LayersIcon, GearIcon, CheckCircledIcon, PersonIcon, ExitIcon } from "@radix-ui/react-icons";
 import { useRole } from "@/contexts/RoleContext";
+import { useUser } from "@/contexts/AuthContext";
 
 const allNavItems = [
   { href: "/", label: "Dashboard", icon: DashboardIcon, color: "text-blue-600", roles: ["admin", "tester"] },
@@ -15,6 +16,7 @@ const allNavItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const { role } = useRole();
+  const { user } = useUser();
   
   // Filter navigation items based on user role
   const navItems = allNavItems.filter(item => item.roles.includes(role));
@@ -60,8 +62,34 @@ export function Sidebar() {
         })}
       </nav>
 
-      {/* Footer */}
-      <div className="p-4 border-t border-slate-200/50 dark:border-slate-700/50">
+      {/* User Info & Logout */}
+      <div className="p-4 border-t border-slate-200/50 dark:border-slate-700/50 space-y-3">
+        {user && (
+          <>
+            <div className="flex items-center gap-3 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                <PersonIcon className="w-4 h-4 text-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                  {user.name || user.email}
+                </div>
+                <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                  {user.email}
+                </div>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => window.location.href = '/api/auth/logout'}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 group"
+            >
+              <ExitIcon className="w-5 h-5" />
+              <span>Logout</span>
+            </button>
+          </>
+        )}
+        
         <div className="text-xs text-slate-400 dark:text-slate-500 text-center">
           © {new Date().getFullYear()} Smart Test
         </div>
