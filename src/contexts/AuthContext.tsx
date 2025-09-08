@@ -8,6 +8,8 @@ interface User {
   nickname?: string;
   picture?: string;
   updated_at?: string;
+  // Auth0 custom claims and metadata
+  [key: string]: unknown;
 }
 
 interface AuthContextType {

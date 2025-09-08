@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser } from '@/contexts/AuthContext';
 import { useQuery } from 'convex/react';
 import { AdminDashboard } from '@/components/AdminDashboard';
 import { TesterDashboard } from '@/components/TesterDashboard';
@@ -11,8 +11,8 @@ import { api } from '../../../convex/_generated/api';
 function DashboardContent() {
   const { user, error, isLoading } = useUser();
   
-  // DEBUG: Log Auth0 state
-  console.log('🔍 Auth0 Debug:', { user, error, isLoading });
+  // DEBUG: Log Custom Auth state
+  console.log('🔍 Custom Auth Debug (Dashboard):', { user, error, isLoading, hasEmail: !!user?.email });
   
   // Fetch tests data from Convex
   const tests = useQuery(api.tests.listTests) || [];
@@ -80,8 +80,10 @@ function DashboardContent() {
 
   // Determina il ruolo dall'utente Auth0 
   // Con custom claims o dal database Convex in futuro
-  const userRole = user['https://smarttest.app/role'] || 
-                   user['https://app_metadata']?.role || 
+  const customRole = user['https://smarttest.app/role'] as string | undefined;
+  const appMetadata = user['https://app_metadata'] as { role?: string } | undefined;
+  const userRole = customRole || 
+                   appMetadata?.role || 
                    'tester';
   
   const userEmail = user.email || '';
