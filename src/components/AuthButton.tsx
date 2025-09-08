@@ -1,9 +1,9 @@
 "use client";
 import { PersonIcon, ExitIcon } from "@radix-ui/react-icons";
-import { useAuth } from "@/hooks/useAuth";
+import { useUser } from "@/contexts/AuthContext";
 
 export function AuthButton() {
-  const { user, isLoading, login, logout } = useAuth();
+  const { user, isLoading } = useUser();
 
   if (isLoading) {
     return (
@@ -21,13 +21,13 @@ export function AuthButton() {
         <div className="flex items-center gap-2 px-3 py-2 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
           <PersonIcon className="w-4 h-4 text-slate-600 dark:text-slate-400" />
           <span className="text-sm font-medium text-slate-900 dark:text-white">
-            {user.nome} {user.cognome}
+            {user.name || user.email}
           </span>
         </div>
         
         {/* Logout Button */}
         <button
-          onClick={logout}
+          onClick={() => window.location.href = '/api/auth/logout'}
           className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 transition-colors"
           title="Logout da Auth0"
         >
@@ -41,7 +41,7 @@ export function AuthButton() {
   return (
     <div className="flex items-center gap-3">
       <button
-        onClick={login}
+        onClick={() => window.location.href = '/api/auth/login'}
         className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 transition-colors"
       >
         <PersonIcon className="w-4 h-4" />

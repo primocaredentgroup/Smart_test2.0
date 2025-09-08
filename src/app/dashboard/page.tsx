@@ -82,9 +82,14 @@ function DashboardContent() {
   // Con custom claims o dal database Convex in futuro
   const customRole = user?.['https://smarttest.app/role'] as string | undefined;
   const appMetadata = user?.['https://app_metadata'] as { role?: string } | undefined;
+  
+  // Temporary: hardcode admin emails
+  const adminEmails = ['s.petretto@primogroup.it', 'simone@example.com'];
+  const isAdmin = user?.email && adminEmails.includes(user.email);
+  
   const userRole = customRole || 
                    appMetadata?.role || 
-                   'tester';
+                   (isAdmin ? 'admin' : 'tester');
   
   const userEmail = user?.email || '';
 
