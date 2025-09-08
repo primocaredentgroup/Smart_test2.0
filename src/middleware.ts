@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-// Protected routes che richiedono autenticazione
-const protectedRoutes = ['/dashboard', '/admin', '/tests'];
+// Protected routes che richiedono autenticazione (per implementazione futura)
+// const protectedRoutes = ['/dashboard', '/admin', '/tests'];
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;

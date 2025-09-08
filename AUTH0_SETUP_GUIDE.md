@@ -50,7 +50,8 @@ Sostituisci i placeholder con i valori reali:
 # Auth0 Configuration 
 AUTH0_CLIENT_ID=IL_TUO_CLIENT_ID_REALE
 AUTH0_CLIENT_SECRET=IL_TUO_CLIENT_SECRET_REALE
-AUTH0_ISSUER_BASE_URL=https://primogroup.eu.auth0.com
+AUTH0_ISSUER_BASE_URL=
+https://primogroup.eu.auth0.com
 AUTH0_BASE_URL=http://localhost:3000
 AUTH0_SECRET=IL_SECRET_GENERATO_CON_OPENSSL
 AUTH0_SCOPE=openid profile email
