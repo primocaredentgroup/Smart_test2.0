@@ -1,12 +1,19 @@
 # 🧪 Smart Test 2.0
 
-Sistema moderno per la gestione dei test funzionali del software interno, progettato per garantire qualità e prevenire regressioni.
+Sistema moderno per la gestione dei test funzionali del software interno con autenticazione Auth0 e database Convex in production.
 
-## ✨ Features Principali
+## ✨ Features Implementate
+
+### 🔐 Autenticazione Completa
+- **OAuth Flow** con Auth0 custom implementation
+- **Login/Logout** sicuro con session management
+- **Role-based access** (Admin/Tester) 
+- **Session persistence** con cookie httpOnly
 
 ### 🎯 Dashboard Role-Based
-- **👑 Admin Dashboard**: Overview del team, ranking tester, analytics, gestione macroaree
-- **👨‍💻 Tester Dashboard**: Statistiche personali, progress tracking, quick actions
+- **👑 Admin Dashboard**: Overview del team, gestione macroaree, analytics
+- **👨‍💻 Tester Dashboard**: Statistiche personali, progress tracking
+- **Sidebar intelligente** con logout e info utente
 
 ### 📋 Gestione Test Completa
 - Creazione test con selezione macroaree
@@ -15,36 +22,27 @@ Sistema moderno per la gestione dei test funzionali del software interno, proget
 - Link Jira integrati
 - Storico completo delle attività
 
-### 🏗️ Sistema Macroaree
-- Gestione sezioni logiche del sistema (Preventivi, Calendario, Fatturazione, etc.)
-- Task standard configurabili per ogni macroarea
-- Sistema di ereditarietà task
-- Log delle modifiche (planned)
-
-### 🎨 UI/UX Moderna
-- Design glassmorphism con gradienti
-- Responsive design (mobile-first)
-- Dark mode support
-- Animazioni fluide e hover effects
-- Iconografia professionale con Radix UI
+### 🗄️ Database Production
+- **Convex Production** deployment con dati migrati
+- **Real-time sync** tra client e database
+- **61 documenti** migrati da dev a prod (macroaree, test, utenti, tasks, audit logs)
 
 ## 🚀 Tech Stack
 
 ### Frontend
-- **Next.js 15** - App Router, TypeScript
-- **Tailwind CSS** - Styling moderno e responsive
+- **Next.js 15.5.2** - App Router, TypeScript
+- **Tailwind CSS** - Styling moderno e responsive  
 - **Radix UI** - Componenti accessibili e icone
-- **React Hook Form** - Gestione form avanzata
-- **Zod** - Validazione schema (planned)
+- **Custom Auth Context** - Gestione stato utente
 
-### Backend (Planned)
-- **Convex** - Database e API real-time
-- **Auth0** - Autenticazione e gestione ruoli
+### Backend & Auth
+- **Auth0** - Autenticazione OAuth con implementation custom
+- **Convex** - Database real-time in production
+- **Secure Cookies** - Session management con httpOnly cookies
 
-### Development
-- **Mock Data System** - Sviluppo frontend-only
-- **Role Context** - Simulazione ruoli Admin/Tester
-- **Hot Reload** - Development experience ottimizzata
+### Deployment
+- **Vercel** - Hosting con environment variables configurate
+- **Production Ready** - Build ottimizzato e sicuro
 
 ## 🏃‍♂️ Quick Start
 
@@ -61,9 +59,7 @@ cd Smart_test2.0
 # Installa dipendenze
 npm install
 
-# Copia configurazione
-cp .env.local.example .env.local
-
+# Configura environment variables (vedi sotto)
 # Avvia development server
 npm run dev
 ```
@@ -75,34 +71,56 @@ Apri [http://localhost:3000](http://localhost:3000) nel browser.
 Crea `.env.local` con:
 
 ```bash
-# Convex (quando integrato)
-NEXT_PUBLIC_CONVEX_URL=https://your-convex-deployment.convex.cloud
-
-# Auth0 (quando integrato)
-AUTH0_SECRET=your-auth0-secret
-AUTH0_BASE_URL=http://localhost:3000
+# Auth0 Configuration (COMPLETA - PRODUZIONE READY)
+AUTH0_CLIENT_ID=your_client_id
+AUTH0_CLIENT_SECRET=your_client_secret  
 AUTH0_ISSUER_BASE_URL=https://your-domain.auth0.com
-AUTH0_CLIENT_ID=your-client-id
-AUTH0_CLIENT_SECRET=your-client-secret
+AUTH0_BASE_URL=http://localhost:3000  # Production: https://your-app.vercel.app
+AUTH0_SECRET=your_generated_secret
 
-# Development flags
-NEXT_PUBLIC_AUTH0_DISABLED=true
+# Client-side variables (CRITICHE per Vercel)
+NEXT_PUBLIC_AUTH0_DOMAIN=your-domain.auth0.com
+NEXT_PUBLIC_AUTH0_CLIENT_ID=your_client_id
+
+# Convex Production
+NEXT_PUBLIC_CONVEX_URL=https://keen-shark-826.convex.cloud
+CONVEX_DEPLOYMENT=dev:limitless-hare-84
 ```
+
+### 🚀 Production Deployment
+
+#### Vercel Environment Variables
+Configura nel dashboard Vercel:
+- Tutte le variabili `AUTH0_*` 
+- `NEXT_PUBLIC_CONVEX_URL=https://keen-shark-826.convex.cloud`
+- `AUTH0_BASE_URL=https://your-app.vercel.app`
+
+#### Auth0 Dashboard
+- **Callback URLs**: `https://your-app.vercel.app/api/auth/callback`
+- **Logout URLs**: `https://your-app.vercel.app`
+- **Web Origins**: `https://your-app.vercel.app`
 
 ## 📱 Utilizzo
 
-### Role Switching (Development)
-- Usa il **Role Switcher** in alto a destra per cambiare tra Admin e Tester
-- Ogni ruolo mostra dashboard e funzionalità diverse
+### 🔐 Autenticazione
+1. **Login**: Vai su `/login` e clicca "Login con Auth0"
+2. **Dashboard**: Dopo login, accesso automatico al dashboard role-based
+3. **Logout**: Clicca "Logout" nella sidebar o nell'header
 
-### Flusso Test
+### 👑 Gestione Ruoli
+- **Admin**: Email configurate in `adminEmails` array (s.petretto@primogroup.it)
+- **Tester**: Tutti gli altri utenti
+- **Riconoscimento automatico** basato su email di login
+
+### 🎯 Flusso Test
 1. **Creazione**: Seleziona macroaree → task automatici + custom
 2. **Esecuzione**: Completa checklist con stati e note
 3. **Finalizzazione**: Tutti task "Done" = test approvato
 
-### Gestione Admin
+### 🛠️ Gestione Admin
 - **Macroaree**: CRUD completo con task standard
-- **Analytics**: Performance team, alert test critici
+- **Analytics**: Performance team, alert test critici  
+- **Utenti**: Gestione team e permessi
 - **Overview**: Monitoring generale sistema
 
 ## 🏗️ Architettura
