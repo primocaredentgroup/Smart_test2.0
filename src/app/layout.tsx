@@ -27,7 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="it">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}> 
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Auth0Provider>
           <Providers>
             <ConditionalLayout>
