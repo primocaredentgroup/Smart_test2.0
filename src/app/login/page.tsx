@@ -3,6 +3,7 @@ import { useUser } from '@auth0/nextjs-auth0';
 import { useEffect } from 'react';
 import { PersonIcon } from "@radix-ui/react-icons";
 // Rimosso Link per evitare prefetch CORS
+// Build errors fixed - deploy trigger
 
 // Client Component con check auth
 export default function LoginPage() {
